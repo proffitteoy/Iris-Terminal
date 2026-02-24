@@ -68,14 +68,6 @@ Copy `.env.local.example` to `.env.local`, then configure at least:
 - File upload/processing: `app/api/local/files/route.ts`
 - Summary generation: `app/api/summaries/generate/route.ts`
 
-### Security Notes
-
-Before publishing to GitHub:
-
-- never commit `.env` or `.env.local`
-- never commit real API keys / DB passwords
-- avoid uploading user data under `storage/`
-- rotate keys immediately if leaked
 
 ---
 
@@ -139,11 +131,4 @@ http://localhost:3000
 - 文件上传与处理：`app/api/local/files/route.ts`
 - 总结生成逻辑：`app/api/summaries/generate/route.ts`
 
-### 安全注意事项
 
-发布到 GitHub 前务必确认：
-
-- 不提交 `.env` / `.env.local`
-- 不提交任何真实 API Key 或数据库密码
-- 不提交 `storage/` 下的用户数据
-- 一旦泄露，立即轮换密钥
