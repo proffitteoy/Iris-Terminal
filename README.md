@@ -2,7 +2,7 @@
   <a href="#english">English</a> | <a href="#简体中文">简体中文</a>
 </p>
 
-# 鸢尾花终端 / Iris Terminal
+# 聊天终端 / Chat-Terminal
 
 Local-first multi-model AI terminal with project-based conversations, long-term memory summaries, and document retrieval.
 
@@ -12,7 +12,7 @@ Local-first multi-model AI terminal with project-based conversations, long-term 
 
 ### Overview
 
-Iris Terminal is a local deployment chat system for long-term use:
+Chat-Terminal is a local deployment chat system for long-term use:
 
 - Multi-model chat (OpenAI, DeepSeek, Gemini, Claude, Grok, GPTSAPI gateway)
 - Project workspaces with project-level instructions
@@ -75,7 +75,7 @@ Copy `.env.local.example` to `.env.local`, then configure at least:
 
 ### 项目简介
 
-鸢尾花终端是一个面向本地部署、长期使用的多模型 AI 对话系统：
+聊天终端是一个面向本地部署、长期使用的多模型 AI 对话系统：
 
 - 多模型聊天（OpenAI、DeepSeek、Gemini、Claude、Grok、GPTSAPI）
 - 项目化工作区与项目级提示词
