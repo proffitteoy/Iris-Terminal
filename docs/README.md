@@ -9,6 +9,7 @@
 
 - [架构说明](./架构说明.md)：当前代码分层、数据流、关键模块职责
 - [technical-architecture](./technical-architecture.md)：Knowledge Agent 二阶段技术架构、pgsql/pgvector 检索层与 Obsidian 集成方案
+- [二阶段开发任务总框架](./二阶段开发任务总框架.md)：Phase 2（Grounded Chat）任务拆解、里程碑、验收与风险
 - [开发指南](./开发指南.md)：启动、迁移、提交流程、改动规范
 - [API说明](./API说明.md)：当前本地 API 与相关约束
 - [能力边界](./能力边界.md)：哪些能力已落地，哪些仍被关闭
@@ -23,6 +24,6 @@
 ## 阅读顺序
 
 1. 先看 [README](../README.md)
-2. 再看 [架构说明](./架构说明.md)、[technical-architecture](./technical-architecture.md) 和 [能力边界](./能力边界.md)
+2. 再看 [架构说明](./架构说明.md)、[technical-architecture](./technical-architecture.md)、[二阶段开发任务总框架](./二阶段开发任务总框架.md) 和 [能力边界](./能力边界.md)
 3. 开始改代码前看 [开发指南](./开发指南.md)
 4. 需要补接口时同步看 [API说明](./API说明.md)

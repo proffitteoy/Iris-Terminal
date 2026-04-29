@@ -187,6 +187,11 @@ Response + Source Metadata
 
 ```text
 lib/agent/
+  phase2-framework.ts
+  phase2/
+    contracts.ts
+    pipeline.ts
+    stages/*
   query-analyzer.ts
   retrieval-router.ts
   context-composer.ts
