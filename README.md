@@ -120,6 +120,7 @@ npm run db-migrate
 - [docs/README.md](./docs/README.md)
 - [docs/架构说明.md](./docs/%E6%9E%B6%E6%9E%84%E8%AF%B4%E6%98%8E.md)
 - [docs/technical-architecture.md](./docs/technical-architecture.md)
+- [docs/二阶段开发任务总框架.md](./docs/%E4%BA%8C%E9%98%B6%E6%AE%B5%E5%BC%80%E5%8F%91%E4%BB%BB%E5%8A%A1%E6%80%BB%E6%A1%86%E6%9E%B6.md)
 - [docs/API说明.md](./docs/API%E8%AF%B4%E6%98%8E.md)
 - [docs/开发指南.md](./docs/%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97.md)
 - [docs/能力边界.md](./docs/%E8%83%BD%E5%8A%9B%E8%BE%B9%E7%95%8C.md)

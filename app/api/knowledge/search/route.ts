@@ -1,25 +1,10 @@
-import { buildCitations } from "@/lib/agent/citation-builder"
-import { composeContextPacket } from "@/lib/agent/context-composer"
-import { analyzeQuery } from "@/lib/agent/query-analyzer"
-import { runRetrievalRouter } from "@/lib/agent/retrieval-router"
-import { RetrievalLogPayload } from "@/lib/knowledge/types"
-import { logRetrievalEvent } from "@/lib/knowledge/retrieval-logger"
+import {
+  normalizeKnowledgeMode,
+  resolveWorkspaceContext,
+  runPhase2Framework
+} from "@/lib/agent/phase2-framework"
 import { ensureLocalBootstrap } from "@/lib/local-bootstrap"
-import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
-
-const normalizeMode = (value: unknown) => {
-  if (value === "chat_only" || value === "grounded" || value === "auto") {
-    return value
-  }
-  return "auto"
-}
-
-interface WorkspaceRow {
-  id: string
-  name: string
-  instructions: string
-}
 
 export async function POST(request: Request) {
   const { workspace } = await ensureLocalBootstrap()
@@ -37,69 +22,38 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "query 不能为空" }, { status: 400 })
   }
 
-  const mode = normalizeMode(json.mode)
-  const analysis = analyzeQuery({
-    query,
-    mode,
-    topK: json.top_k
+  const mode = normalizeKnowledgeMode(json.mode)
+  const workspaceId = json.workspace_id ?? workspace.id
+  const workspaceContext = await resolveWorkspaceContext({
+    workspaceId,
+    fallbackName: workspace.name
   })
 
-  const workspaceId = json.workspace_id ?? workspace.id
+  const phase2 = await runPhase2Framework({
+    query,
+    mode,
+    workspaceId,
+    workspaceName: workspaceContext.name,
+    workspaceInstruction: workspaceContext.instructions,
+    topK: json.top_k,
+    chatId: json.chat_id ?? null,
+    messageId: json.message_id ?? null
+  })
 
-  if (!analysis.shouldRetrieve) {
+  if (!phase2.analysis.shouldRetrieve) {
     return NextResponse.json({
-      analysis,
+      analysis: phase2.analysis,
       candidates: [],
       sources: [],
       citations: []
     })
   }
 
-  const candidates = await runRetrievalRouter({
-    analysis,
-    workspaceId
-  })
-
-  const workspaceRows = await prisma.$queryRaw<WorkspaceRow[]>`
-    SELECT "id", "name", "instructions"
-    FROM "workspaces"
-    WHERE "id" = ${workspaceId}::uuid
-    LIMIT 1;
-  `
-  const workspaceRow = workspaceRows[0]
-
-  const contextPacket = composeContextPacket({
-    workspaceName: workspaceRow?.name ?? workspace.name,
-    workspaceInstruction: workspaceRow?.instructions ?? "",
-    query,
-    candidates
-  })
-  const citations = buildCitations({ sources: contextPacket.sources })
-
-  const logPayload: RetrievalLogPayload = {
-    chat_id: json.chat_id ?? null,
-    message_id: json.message_id ?? null,
-    query,
-    mode: analysis.mode,
-    strategy: analysis.strategy,
-    recalled_items: candidates.map(item => ({
-      chunk_id: item.chunk_id,
-      note_id: item.note_id,
-      score: item.final_score
-    })),
-    final_context: {
-      sources: contextPacket.sources,
-      token_budget: contextPacket.token_budget,
-      used_tokens: contextPacket.used_tokens
-    }
-  }
-  await logRetrievalEvent(logPayload)
-
   return NextResponse.json({
-    analysis,
-    candidates,
-    sources: contextPacket.sources,
-    citations,
-    context_preview: contextPacket.text
+    analysis: phase2.analysis,
+    candidates: phase2.candidates,
+    sources: phase2.contextPacket.sources,
+    citations: phase2.citations,
+    context_preview: phase2.contextPacket.text
   })
 }
